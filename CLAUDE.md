@@ -2,7 +2,15 @@
 
 ## 이 폴더의 성격
 
-옛 옵시디언 볼트의 **읽기 전용 백업** + 시드/브리프 수신함(`_briefs/`)이다. 정식 볼트는 iCloud(`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/study`)이며, 완성 노트는 전부 그쪽에 쓴다. 이 폴더의 기존 노트는 사용자가 명시적으로 허락하기 전까지 삭제·수정 금지.
+**iCloud 볼트의 git 아카이브 미러** + 시드/브리프 수신함(`_briefs/`, git 제외). 정식 볼트는 iCloud(`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/study`)이며, 완성 노트는 전부 그쪽에 쓴다. **이 폴더의 노트는 직접 편집하지 않는다** — iCloud → 여기로 rsync 후 커밋·푸시만 한다(원격: `team-skyjs/kbap-study`, PUBLIC). 아카이브 동기화는 사용자가 요청할 때만.
+
+```bash
+# 동기화 명령 (볼트 → 여기). --delete 포함이므로 이 폴더에만 있는 노트는 사라진다
+rsync -a --delete --exclude='.git' --exclude='.claude' --exclude='.agents' --exclude='.codex' \
+  --exclude='_briefs' --exclude='CLAUDE.md' --exclude='AGENTS.md' --exclude='.DS_Store' \
+  --exclude='.obsidian/workspace*.json' \
+  "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/study/" ./
+```
 
 ## 하네스: kbap 백엔드 공부
 
@@ -19,3 +27,4 @@
 | 2026-08-26 | 머리 블록 고정 규칙 추가 (H1 아래 `작성·맥락/목표` + `## 0. 한 줄 요약`, 절 번호 0부터) | study-note-style 스킬 | R3에서 노트 14만 인라인 한 줄 요약·절 번호 1부터로 갈림 |
 | 2026-08-27 | 응답 JSON 실측 대조 규칙 추가 (봉투는 `success·payload·message·code` 4필드, `data`·`error` 없음) | study-note-style 스킬 | 재구축 중 `"data"` 오기가 노트22·27에서 두 번 발생 — FE가 베끼면 undefined |
 | 2026-09-03 | **독자 상 정정 + TS/JS 비교 금지** — 자바 CRUD 조금 해봄·내부 동작 전혀 모름 전제, FE 대비표 폐기, "다음 노트가 정본" 회피 금지 | study-note-style 스킬 | 사용자가 노트2 §7·노트3에서 막힘 — "ts 전문가 아니다, ts js 비교는 빼라" |
+| 2026-09-04 | 폴더 성격 변경 — 읽기 전용 백업 → **iCloud 볼트의 git 미러**(`team-skyjs/kbap-study`). rsync 동기화 명령 명시, `.gitignore`(`_briefs/`·workspace json·.DS_Store) | 이 폴더 전체 | 사용자가 노트 GitHub 아카이빙 요청 — iCloud 안에 `.git` 두면 동기화 꼬일 수 있어 볼트 밖 미러 방식 채택 |
